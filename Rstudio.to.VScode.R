@@ -1,5 +1,6 @@
 #https://github.com/anthonynorth/rscodeio/blob/master/README.md
-remotes::install_github("anthonynorth/rscodeio")
+
 install.packages("remotes")
 library(remotes)
+remotes::install_github("anthonynorth/rscodeio")
 rscodeio::install_theme()
