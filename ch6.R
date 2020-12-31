@@ -37,7 +37,54 @@ if(a>15 | b>15) { b  # or
 #예시3 ifelse()
 a <- 10
 b <- 20
-ifelse(a>b, c <- a, c <- b)
+ifelse(a>b, c <- a, c <- b) #(조건, 참, 거짓)
 
 
 ####반복문####
+for(i in 1:10) {
+  print(i)
+}
+
+# 구구단 만들기
+for (i in 1:10) {
+  cat("2*",i,"=",2*i,"\n")
+}
+
+# 짝수인지 확인
+for(i in 1:20) {
+  if(i%%2==0) {
+    print(i)
+  }
+}
+
+# 반복문과 if 응용
+v1 <- 101:200
+for(i in 1:length(v1)) {
+  if(v1[i]%%2==0) {
+    print(v1[i]*2)
+  } else {
+    print(v1[i]+2)
+  }
+}
+
+# 1부터 100까지 합 구하기 (수열)
+sum <- 0
+for(i in 1:100) {
+  sum <-  sum + i
+}
+print(sum)
+
+# 반복문 while
+# 특정 조건이 만족될 때까지 반복하는 것
+i <- 1
+while(i <= 10) {
+  print(i)
+  i <- i+1
+}
+
+#iris 데이터에서 Sepal.Length가 5~6사이인 표본만 골라보기
+data(iris)
+subset(iris, Sepal.Length >= 5.0 &
+         Sepal.Length <= 6.0)[, 1:2]
+
+idx <- c()
