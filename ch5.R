@@ -1,6 +1,65 @@
 # Dog's honey tip: 주석처리 단축키
 # ctrl + shift + c
 
+####R Studio 단축키####
+
+# 파이프연산자
+ctrl + shfit + m
+
+# 할당연산자 (asign)
+# alt + -
+
+# 커서 여러개 만들기
+ctrl + alt + 방향키
+plot( )
+plot( )
+plot( )
+plot( )
+plot( )
+
+# 줄 복사
+shift + alt + 방향키
+안녕하세요 shortcut 배우기
+안녕하세요 shortcut 배우기
+안녕하세요 shortcut 배우기
+안녕하세요 shortcut 배우기
+
+# 함께 바꾸기
+ctrl + alt + k
+안녕하세요 shortcut 배우기
+shortcut 배우기 안녕 요하세
+안녕하세요 shortcut 배우기
+하세요 shortcut 배우기 안녕
+
+# 커맨드처리 (주석처리)
+ctrl + shift + c
+
+# 지저분한 코드 정리하기 (예쁘게 만들어주기)
+mydata <- function(var1) {
+  a <- c(1:10)
+  b <- a/3
+  plot(a,b)
+}
+
+ctrl + shift + a
+# mydata <- function(var1) {
+#   a <- c(1:10)
+#   b <- a / 3
+#   plot(a, b)
+# }
+
+# 콘솔창 정리
+ctrl + l
+
+# shortcut 만들기
+tools > modify keyboard shortcut > Insert Snippet
+
+# 패널 간 이동
+ctrl+1 스크립트
+ctrl+2 콘솔창
+
+
+
 
 ####산점도####
 data("mtcars")
