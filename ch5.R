@@ -6,6 +6,7 @@
 # 파이프연산자
 ctrl + shfit + m
 
+
 # 할당연산자 (asign)
 # alt + -
 
@@ -37,8 +38,8 @@ ctrl + shift + c
 # 지저분한 코드 정리하기 (예쁘게 만들어주기)
 mydata <- function(var1) {
   a <- c(1:10)
-  b <- a/3
-  plot(a,b)
+  b <- a / 3
+  plot(a, b)
 }
 
 ctrl + shift + a
@@ -56,7 +57,7 @@ tools > modify keyboard shortcut > Insert Snippet
 
 # 패널 간 이동
 ctrl+1 스크립트
-ctrl+2 콘솔창
+ctrl+2 콘솔창   
 
 
 
@@ -73,12 +74,9 @@ plot(wt,mpg,
      sub = "test",
      xlab = "Car Weight",
      ylab = "Miles Per Gallon",
-     ann = T, #x축, y축에 제목을 지정할 것인가? (기본)
-     axes = T, #x,y축을 표시할 것인가? (기본)
-     tmag = 2, #제목에 사용되는 문자의 확대 정도
      col = "red",
      cex = 1, # 점의 크기
-     pch = 18, #point의 종류
+     pch = 19, #point의 종류
      type = "p") # 점 모양 그래프(기본값) (p,l,b,c,o,h,s,S,n 등 설정 가능)
 # 산점도를 보면 상관관계를 시각적으로 볼 수 있다.
 # 변수 간 상관관계 확인 가능
@@ -130,7 +128,7 @@ cor(iris$Petal.Width, iris$Petal.Length) # 상관성 분석 시행
 
 
 # 여러 변수들 간 상관계수를 동시에 구하고 싶다면?
-cor(iris[,1:4])
+cor(iris[,-5])
 
 
 ####선그래프####
@@ -144,9 +142,9 @@ late <-  c(5,8,7,9,4,6,12,13,8,6,6,4)
 plot(month,                   # x data
      late,                    # y data
      main="Late student",     # 그래프 제목
-     type="l",                # 그래프 종류(알파벳 l,b,o)
+     type="o",                # 그래프 종류(알파벳 l,b,o)
      lty=1,                   # 선의 종류 (1:6)
-     lwd=1,                   # 선의 굵기
+     lwd=2,                   # 선의 굵기
      xlab="Month",            # x축 레이블
      ylab="Late cnt")         # y축 레이블
 
@@ -169,10 +167,10 @@ plot(month,                   # x data
      )
 lines(month,
       late2,
-      type="o",
+      type="b",
       col="red")
 
-
+rm(list=ls())
 #######데이터 분석 연습#######
 
 str(iris)
@@ -193,7 +191,7 @@ summary(iris)
 sd(iris[,1])        
 
 # 각 데이터에 대해 그룹별 분포를 확인하고자 할 때
-par(mfrow =c(2,2))
+par(mfrow =c(1,1))
 boxplot(Sepal.Length~Species,
         data=iris,
         main = "Sepal.Length")
