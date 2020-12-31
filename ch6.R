@@ -33,7 +33,6 @@ if(a>15 | b>15) { b  # or
   print (a*b)
 }
 
-
 #예시3 ifelse()
 a <- 10
 b <- 20
@@ -49,6 +48,7 @@ for(i in 1:10) {
 for (i in 1:10) {
   cat("2*",i,"=",2*i,"\n")
 }
+
 
 # 짝수인지 확인
 for(i in 1:20) {
@@ -69,7 +69,7 @@ for(i in 1:length(v1)) {
 
 # 1부터 100까지 합 구하기 (수열)
 sum <- 0
-for(i in 1:100) {
+for(i in 1:200) {
   sum <-  sum + i
 }
 print(sum)
