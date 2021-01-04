@@ -50,6 +50,8 @@ treemap(GNI.A,
 # 원의 크기를 가지고 어떤 숫자를 표현
 # 원이 클 수록 숫자가 크다
 
+rm(list=ls())
+
 install.packages("MASS")
 library(MASS)
 data(UScrime)
@@ -173,6 +175,7 @@ mosaicplot(UCBAdmissions[,,i],
            xlab = "Admit", ylab = "Sex",
            main = paste("Department", LETTERS[i]),
            color = TRUE)
+letters
 
 par(mfrow = c(1, 1))
 rm(list = ls())
