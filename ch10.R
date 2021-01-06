@@ -32,7 +32,9 @@ noun2 <- unlist(noun)
 noun2
 wordcount <- table(noun2)
 temp <- sort(wordcount, decreasing = T)[1:10]
+temp
 temp <- temp[-1]
+temp
 
 barplot(temp, las = 2,
         names.arg = names(temp),
@@ -44,7 +46,7 @@ wordcloud(names(wordcount),
           min.freq = 3, # 최소빈도
           random.order = F,  # 빈도수에 따른 장소를 중앙에 배치
           rot.per = .1, # 90도 회전 단어 비율
-          colors=pal2, 
+          colors=pal2, # 앞에 입력한 변수 색
           )
 
 
