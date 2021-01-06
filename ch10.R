@@ -2,12 +2,16 @@ install.packages("wordcloud")
 install.packages("RColorBrewer")
 install.packages('rJava')
 install.packages("memoise")
-install.packages("KoNLP")
+
 library(RColorBrewer)
 library(wordcloud)
 library(rJava)
 library(memoise)
 library(KoNLP)
+
+install.packages(c('stringr', 'hash', 'tau', 'Sejong', 'RSQLite', 'devtools'), type = "binary")
+install.packages("remotes")
+remotes::install_github('haven-jeon/KoNLP', upgrade = "never", INSTALL_opts=c("--no-multiarch"))
 
 
 # KoNLP 설치방법: 첫 번쨰 방법
@@ -32,6 +36,7 @@ noun2 <- unlist(noun)
 noun2
 wordcount <- table(noun2)
 temp <- sort(wordcount, decreasing = T)[1:10]
+temp
 temp <- temp[-1]
 
 barplot(temp, las = 2,
@@ -40,7 +45,7 @@ barplot(temp, las = 2,
 
 wordcloud(names(wordcount),
           freq = wordcount,
-          scale = c(6,0,7),
+          scale = c(30,0,30),
           min.freq = 3, # 최소빈도
           random.order = F,  # 빈도수에 따른 장소를 중앙에 배치
           rot.per = .1, # 90도 회전 단어 비율
@@ -100,8 +105,10 @@ library(wordcloud2)
 wordcloud2(word_table2, 
            color = "random-light", 
            backgroundColor = "black",
-           shape = "circle") # circle(기본), diamond, triangle, triangle-forward, pentagon
-
+           shape = "pentagon") # circle(기본), diamond, triangle, triangle-forward, pentagon
+?wordcloud2
 
 # 네이버 데이터랩
+
+letterCloud(data=word_table2,word='R',wordSize=3,fontFamily='맑은고딕')
 
