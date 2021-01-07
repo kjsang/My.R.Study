@@ -18,6 +18,7 @@ sum(x)
 sum(x, na.rm=T)  # 결측값 제외하고 연산
 sum(is.na(x)) # 결측값 포함 개수 확인
 x[is.na(x)] <- 0  # NA를 0으로 치환
+x
 
 # 2차원에서의 NA
 x <- iris
@@ -34,8 +35,10 @@ na_count <- sapply(x, FUN=col_na)
 na_count
 
 #결측값(이 포함된 row) 제외한 dataset 생성
+complete.cases(x)
 x[!complete.cases(x),]
 complete.x <- x[complete.cases(x),]
+summary(complete.x)
 
 # 결측값을 적당한 값으로 추정해 치환
 x <- iris
@@ -43,11 +46,13 @@ x[1,2] <- NA; x[1,3] <- NA
 x[2,3] <- NA; x[3,4] <- NA
 head(x)
 
-install.packages("mice")
+# install.packages("mice")
 library(mice)
 md.pattern(x)
 result <- mice(x, m=5, maxits= 50,
                method = "pmm", seed = 500)
+?mice
+result <- mice(x)
 impute_x <- complete(result, 2)
 head(x)
 head(impute_x)
@@ -77,10 +82,13 @@ out.val <- boxplot.stats(st$Income)$out
 st$Income[st$Income %in% out.val] = NA
 st$Income
 newdata <- st[complete.cases(st), ]
+boxplot(newdata$Income)
+
 
 
 #### 정렬(sort, order, rank) ####
 
+iris$Sepal.Length
 order(iris$Sepal.Length)
 sort(iris$Sepal.Length) # 오름차순
 sort(iris$Sepal.Length, # 내림차순
@@ -91,11 +99,12 @@ iris[order(iris$Species, iris$Sepal.Length),]
 # order: 정렬 시 순서값
 # rank: 현재 값의 순위
 a <- sample(1:50, 10)
+a
 a[9] <- NA
 sort(a)
 rank(a)
 order(a)
-rank(a, na.last=NA) # NA값 제거 (F, keep, NA)
+rank(a, na.last=T) # NA값 제거 (F, keep, NA)
 order(a, na.last = "NA") # NA값 제거 (T, F, NA)
 
 
@@ -120,6 +129,7 @@ x <- sample(1:10, 7)
 x
 which(x>5) # 조건에 맞는 값의 "인덱스" 산출
 which(iris$Species=="setosa")
+iris
 which.max(iris$Sepal.Length)
 which.min(iris$Sepal.Length)
 
@@ -129,11 +139,14 @@ which.min(iris$Sepal.Length)
 x <- 1:100
 y <- sample(x, size = 10, replace = F)
 # replace 생략 가능
+y
 
 # iris에서 50개 행 임의추출
 iris.sample.index <- sample(nrow(iris), 50)
+iris.sample.index
 iris.sample <- iris[iris.sample.index,]
 head(iris.sample)
+iris.sample
 
 # combination
 combn(5,3) # 5개 중 3개 뽑는 조합
@@ -152,14 +165,17 @@ agg <- aggregate(iris[,1:4],
                  FUN = mean)
 agg
 
-letters[c(1:4)]
+letters[c(1:3)]
 
 #### 데이터 병합(merge) ####
 # 공통 칼럼 매개로 2개의 2차원 배열을 병합
 x <- data.frame(name=letters[c(1:3)],
                 math = c(90,80,40))
 y <- data.frame(name=letters[c(1:4)],
-                math = c(80,70,50,50))
+                korean = c(80,70,50,50))
+x
+y
+
 merge(x,y, by=c("name"))
 merge(x,y, by=c("name"), all.x = T)
 merge(x,y, by=c("name"), all.y = T) # 결측값
@@ -169,7 +185,7 @@ merge(x,y, by=c("name"), all = T) # 결측값
 x <- data.frame(name=letters[c(1:3)],
                 math = c(90,80,40))
 y <- data.frame(nickname=letters[c(1:4)],
-                math = c(80,70,50,50))
+                korean = c(80,70,50,50))
 merge(x,y,
       by.x=c("name"),
       by.y = c("nickname"))
