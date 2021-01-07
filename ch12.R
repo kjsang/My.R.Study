@@ -206,3 +206,31 @@ pred.iris2 <- predict(mod.iris, unknown)
 pred.iris2
 
 # 3 (여러 개)
+
+test.iris <- iris[,1:4]
+pred.iris3 <- predict(mod.iris, test.iris)
+pred.iris3
+pred.iris3 <- round(pred.iris3,0)
+pred.iris3 # 순서별 예측 품종이 나온다.
+#얼마나 성공했나?
+pred.iris3 == as.integer(iris[,5])
+acc <- mean(pred.iris3 == as.integer(iris[,5]))
+acc
+
+# 주의할 점
+# 종속변수는 숫자여야 하기에 문자형의 경우 숫자로 변환 후 작업
+# 범주형 데이터가 factor의 경우 as.integer()로 숫자변환 가능
+class(iris$Species)
+iris$Species
+as.integer(iris$Species)
+
+#### 군집화 ####
+
+
+#### k-means clustering ####
+
+
+#### KNN classification ####
+
+
+#### k-fold cross validation ####
