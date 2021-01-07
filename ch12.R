@@ -10,7 +10,7 @@ model <- lm(dist~speed, cars)
 model
 
 # 회귀식의 형태는
-# y - Wx + b
+# y = Wx + b
 coef(model) [1] #b
 coef(model) [2] #W
 
@@ -42,6 +42,7 @@ abline(coef(model))
 
 install.packages("car")
 library(car)
+data("Prestige")
 head(Prestige)
 new.data <- Prestige[c(1:4)]
 plot(new.data, pch = 16,
@@ -96,7 +97,7 @@ head(new.data2)
 model.income2 <- lm(income ~ education+prestige+women+census,
                     data = new.data2)
 step <- stepAIC(model.income2, direction = "both")
-
+summary(step)
 # Start:  AIC=1607.93
 # income ~ education + prestige + women + census 첫번째
 # 
@@ -155,6 +156,7 @@ summary(model.income3)
 # 예) iris 품종 예측
 
 head(iris)
+as.integer(iris$Species)
 # 종속변수가 숫자형 이어야 함 . 범주형 변수를 숫자로 변환
 mod.iris <- glm(as.integer(Species) ~.,
             data= iris)
