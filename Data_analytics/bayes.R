@@ -20,6 +20,8 @@ install.packages(c("rethinking", "greta"))
 # 동전을 10번 던져서 앞면이 8번, 뒷면이 2번 나왔을 때, 
 # 이 동전의 앞면이 나올 확률 분포를 그려보면 다음과 같다.
 
+
+
 rangeP <- seq(0, 1, length.out = 100)
 plot(rangeP, dbinom(x = 8, prob = rangeP, size = 10),
      type = "l", xlab = "P(앞면)", ylab = "Density")

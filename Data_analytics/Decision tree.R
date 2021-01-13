@@ -30,9 +30,10 @@ hr<-read.csv("Heart.csv", header = T)
 head(hr)
 
 a<-information.gain(AHD~., hr[,-1])
-
+a
 
 # 2. 의사결정나무만들기
+
 tree <- rpart(AHD~.,data=hr[,-1], control=rpart.control(minsplit=2))
 fancyRpartPlot(tree)
 
