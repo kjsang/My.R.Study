@@ -18,10 +18,10 @@ if(require("MASS")      == F) install.packages("MASS")
 if(require("e1071")     == F) install.packages("e1071")
 
 # 라이브러리
-library(mlbench)
+library(mlbench) # 활용할 데이터셋
 library(dplyr)
 library(MASS)
-library(e1071)
+library(e1071) # 베이지안 모델에 활용 알고리즘
 
 # 데이터
 set.seed(1234)
@@ -66,7 +66,7 @@ naCount(2, "republican") # 2번째 열(1번째 안건)에 대한 공화당 결�
 yesProb <- function(col, cls) {
   sum.y <- sum(votes[,col]=="y" & votes$Class==cls, na.rm = T)
   sum.n <- sum(votes[,col]=="n" & votes$Class==cls, na.rm = T)
-  return(sum.y/sum.y+sum.n)
+  return(sum.y/(sum.y+sum.n))
 }
 yesProb (2, "democrat")
 yesProb (2, "republican")
@@ -136,10 +136,10 @@ nbRuns <- function(fraction, run) {
 }
 
 # 비율과 시행횟수 지정
-votes.nb.cv <- nbRuns(0.7, 100)
+votes.nb.cv <- nbRuns(0.7, 1000)
 votes.nb.cv
 summary(votes.nb.cv)
-# 90.1퍼센터 정도의 정확도를 보인다.
+# 91.4퍼센터 정도의 정확도를 보인다.
 
 # 얼마나 정확한가? 시각화
 library(ggplot2)
