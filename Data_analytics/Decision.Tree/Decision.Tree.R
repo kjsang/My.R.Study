@@ -6,7 +6,7 @@
 install.packages("mlbench")
 library(mlbench)
 
-
+111
 # 2. 데이터 확인
 data(BreastCancer)
 str(BreastCancer)
@@ -16,7 +16,7 @@ str(BreastCancer)
 # 세포조직의 특성 8가지
 btc <- BreastCancer
 
-table(btc$Class)
+table(btc$Class)  
 # 양성 358 악성 241
 mean(btc$Class=="benign") # 양성비율 65.5%
 mean(btc$Class=="malignant") # 악성비율 34.4%
