@@ -3,7 +3,6 @@ library(mlbench)
 data("BreastCancer")
 str(BreastCancer)
 
-
 bc <- BreastCancer[-1]
 bc <- cbind(lapply(bc[-10], function(x) as.numeric(as.character(x))), bc[10])
 str(bc)
