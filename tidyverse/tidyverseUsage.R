@@ -30,6 +30,7 @@ filter(mpg, drv %in% "r" | class %in% "suv")
 # 2. agrittr, 읽기 쉬운 코드의 시작이자 dplyr의 완성형
 mpg %>% 
   filter(year > 2000 & class %in% c("subcompact"))
+filter(mpg, year > 2000 & class %in% c("subcompact"))
 
 # select()
 mpg %>% 
@@ -80,6 +81,7 @@ mpg %>%
   arrange(desc(hwy_mean))
 
 # 6. 결측치 처리
+nycflights13::flights
 nycflights13::flights %>% 
   filter(!is.na(dep_delay)) %>% 
   group_by(month) %>% 
@@ -91,3 +93,4 @@ nycflights13::flights %>%
 # mutate를 통한 변수(열) 만들기
 mpg %>% 
   mutate(hwy_per_cty = hwy / cty)
+
