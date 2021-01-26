@@ -1,23 +1,10 @@
 # sentiments analysis #
-
+install.packages("tidytext")
+install.packages("textdata")
 library(tidytext)
+sentiments
 get_sentiments("afinn")
-
-#> # A tibble: 2,477 x 2
-#>    word       value
-#>    <chr>      <dbl>
-#>  1 abandon       -2
-#>  2 abandoned     -2
-#>  3 abandons      -2
-#>  4 abducted      -2
-#>  5 abduction     -2
-#>  6 abductions    -2
-#>  7 abhor         -3
-#>  8 abhorred      -3
-#>  9 abhorrent     -3
-#> 10 abhors        -3
-#> # … with 2,467 more rowsCopy
-
+get_sentiments("bing")
 get_sentiments("bing")
 #> # A tibble: 6,786 x 2
 #>    word        sentiment
@@ -34,22 +21,6 @@ get_sentiments("bing")
 #> 10 aborts      negative 
 #> # … with 6,776 more rowsCopy
 
-get_sentiments("nrc")
-#> # A tibble: 13,901 x 2
-#>    word        sentiment
-#>    <chr>       <chr>    
-#>  1 abacus      trust    
-#>  2 abandon     fear     
-#>  3 abandon     negative 
-#>  4 abandon     sadness  
-#>  5 abandoned   anger    
-#>  6 abandoned   fear     
-#>  7 abandoned   negative 
-#>  8 abandoned   sadness  
-#>  9 abandonment anger    
-#> 10 abandonment fear     
-#> # … with 13,891 more rows
-#
 library(janeaustenr)
 library(dplyr)
 library(stringr)
@@ -65,28 +36,28 @@ tidy_books <- austen_books() %>%
   unnest_tokens(word, text)
 
 
-nrc_joy <- get_sentiments("nrc") %>% 
-  filter(sentiment == "joy")
+nrc_joy <- get_sentiments("bing") %>% 
+  filter(sentiment == "positive")
 
 tidy_books %>%
   filter(book == "Emma") %>%
   inner_join(nrc_joy) %>%
   count(word, sort = TRUE)
 
-#> # A tibble: 303 x 2
-#>    word        n
-#>    <chr>   <int>
-#>  1 good      359
-#>  2 young     192
-#>  3 friend    166
-#>  4 hope      143
-#>  5 happy     125
-#>  6 love      117
-#>  7 deal       92
-#>  8 found      92
-#>  9 present    89
-#> 10 kind       82
-#> # … with 293 more rows
+# # A tibble: 668 x 2
+# word         n
+# <chr>    <int>
+#   1 well       401
+# 2 good       359
+# 3 great      264
+# 4 like       200
+# 5 better     173
+# 6 enough     129
+# 7 happy      125
+# 8 love       117
+# 9 pleasure   115
+# 10 right       92
+# # ... with 658 more rows
 
 library(tidyr)
 
@@ -150,9 +121,10 @@ bind_rows(afinn,
   geom_col(show.legend = FALSE) +
   facet_wrap(~method, ncol = 1, scales = "free_y")
 
+# 이거 안 됨
 get_sentiments("nrc") %>% 
   filter(sentiment %in% c("positive", "negative")) %>% 
-  count(sentiment)Copy
+  count(sentiment)
 #> # A tibble: 2 x 2
 #>   sentiment     n
 #>   <chr>     <int>
@@ -225,6 +197,7 @@ custom_stop_words
 
 
 # 워드클라우드
+install.packages("wordcloud")
 library(wordcloud)
 
 tidy_books %>%
