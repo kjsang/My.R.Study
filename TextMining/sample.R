@@ -12,7 +12,10 @@ getAllComment(tar) %>%
   select(userName, contents) %>%
   unnest_tokens(ws, contents, "words")
 
-# install.packages("rJava")
+
+
+install.packages("remot")
+install.packages("rJava")
 library(rJava)
 
 remotes::install_github('haven-jeon/KoNLP', upgrade = "never", INSTALL_opts=c("--np-multiarch"))
@@ -22,13 +25,6 @@ SimplePos09("롯데마트가 판매하고 있는 흑마늘 양념 치킨이 논�
 install.packages("RmecabKo")
 RmecabKo::install_mecab("c:/Rlib/mecab")
 library(RmecabKo)
-
-# 하나의 뉴스 데이터를 가져와서
-getContent("https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313") %>% 
-  select(body) %>%
-# 본문 컬럼을 word 단위로 쪼갠 결과물을 word라는 컬럼으로 출력
-  unnest_tokens(input = body,
-                output = word)
 
 # unnest_tokens(
 #   tbl = 텍스트 데이터,
@@ -53,7 +49,7 @@ getAllComment(
   group_by(userName) %>%
   # pos 결과물의 순서 보장을 위해 순서 값을 추가
   mutate(pos_order = 1:n()) %>% 
-  ungroup -> pos_res
+  ungroup()
 
 # # A tibble: 4,026 x 3
 # # Groups:   userName [224]
@@ -111,12 +107,14 @@ getAllComment(
 # install.packages("remotes")
 remotes::install_github("mrchypark/multilinguer", force = T)
 library(multilinguer)
-multilinguer::install_conda()
 install.packages("reticulate")
 reticulate::install_miniconda()
 
 remotes::install_github("haven-jeon/KoSpacing")
 library(KoSpacing)
+
+
+
 set_env()
 spacing("롯데마트가판매하고있는흑마늘양념치킨이논란이되고있다.")
 
@@ -125,3 +123,174 @@ library(RmecabKo)
 library(KoNLP)
 spacing("롯데마트가판매하고있는흑마늘양념치킨이논란이되고있다.") %>%
   SimplePos09
+
+
+#### 지표분석 ####
+
+library(N2H4)
+library(dplyr)
+library(tidytext)
+library(KoNLP)
+library(stringr)
+library(wordcloud)
+
+# 워드클라우드
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+  getAllComment() %>%
+  select(userName, contents) %>%
+  filter(str_length(contents)<250) %>% # 엄청 긴 거
+  unnest_tokens(pos, contents,
+              token = SimplePos09) %>%
+  filter(str_detect(pos, "/n")) %>%
+  mutate(pos_done = str_remove(pos, "/.*$")) %>% 
+  filter(str_length(pos_done)>1) %>%
+  count(pos_done, sort = T) %>%
+  with (
+    wordcloud(words = pos_done, freq = n, min.freq = 1,
+              max.words=50, random.order=FALSE, rot.per=0.35, 
+              colors=brewer.pal(8, "Dark2"))
+    )
+
+# 유저별 빈도를 R아보자 (단순빈도)
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+  getAllComment() %>%
+  select(userName, contents) %>%
+  filter(str_length(contents)<250) %>%
+  unnest_tokens(pos, contents,
+                token = SimplePos09) %>%
+  filter(str_detect(pos, "/n")) %>%
+  mutate(pos_done = str_remove(pos, "/.*$")) %>% 
+  filter(str_length(pos_done)>1) -> pos_d
+
+pos_d %>% 
+  select(-pos) %>% 
+  group_by(userName) %>% 
+  count(pos_done, sort=T) %>% 
+  filter(pos_done == "우리")
+
+# 동시출현빈도계산
+library(KoSpacing)
+set_env()
+library(widyr)
+library(KoNLP)
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+  getAllComment() %>%
+  unnest_tokens(sent, contents,
+                token = "sentences") %>% 
+  filter(str_length(sent)<198) %>% #에러가 떠서
+  mutate(sent=spacing(sent) %>% 
+           unlist()) %>% 
+  mutate(id = as.numeric(1:n())) %>% 
+  unnest_tokens(pos, sent,
+                token = SimplePos09) %>% 
+  select(id, pos) %>% 
+  filter(str_detect(pos, "/n|v(v|a)")) %>% 
+  mutate(pos =
+           str_remove_all(pos, "/.*$")) %>% 
+  filter(str_length(pos)>1) %>% 
+  pairwise_count(pos, id,
+                 sort = T, upper = F) -> pw
+pw
+
+# 바차트 그려보기
+# 바차트 그리는게 무슨 의미? 
+# 판사가 아침마다 조간신문 정독...
+# 모든 기사를 네트워크를 그리면 사건들의 이슈가 보인다.
+pw %>%
+  filter(item1 == "우리")
+library(forcats)
+library(ggplot2)
+# bar plot
+pw %>%
+  filter(item1 %in% c("우리")) %>%
+  top_n(15) %>%
+  mutate(item2 = fct_reorder(item2, n, .desc = TRUE)) %>%
+  ggplot(aes(x = item2, y = n, fill = item1)) +
+  geom_bar(stat = "identity")
+
+# 네트워크 시각화
+library(igraph)
+pw %>%
+  filter(n > 5) %>%
+  graph_from_data_frame() ->
+  pw_graph
+pw_graph
+
+library(ggraph)
+set.seed(2018)
+a <- grid::arrow(type = "closed", length = unit(.1, "inches"))
+ggraph(pw_graph) +
+  geom_edge_link(
+    aes(edge_alpha = n),
+    show.legend = FALSE,
+    arrow = a,
+    end_cap = circle(.07, 'inches')
+  ) +
+  geom_node_point(color = "lightblue", size = 3) +
+  geom_node_text(aes(label = name), vjust = 1, hjust = 1) +
+  theme_void()
+# 단순빈도로만 했기 때문에 내용이 별거 없음
+
+
+# tf-idf
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+  getAllComment() %>%
+  select(userName, contents) %>%
+  mutate(id = as.numeric(1:n())) %>%
+  select(id, contents) %>%
+  filter(str_length(contents)<250) %>% # 엄청 긴 거
+  unnest_tokens(pos, contents,
+                token = SimplePos09) %>%
+  filter(str_detect(pos, "/n|v(v|a)")) %>%
+  mutate(pos = str_remove_all(pos, "/.*$")) %>% 
+  filter(str_length(pos)>1) %>%
+  group_by(id) %>% 
+  count(pos) %>% 
+  bind_tf_idf(pos, id, n) %>% 
+  ungroup() %>% 
+  arrange(desc(tf_idf))
+
+
+library(N2H4)
+library(dplyr)
+library(tidytext)
+library(KoNLP)
+library(stringr)
+library(RmecabKo) # token = pos
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+  getAllComment() %>% 
+  select(userName, contents) -> tar 
+
+tar %>% 
+  mutate(id = as.numeric(1:n())) %>%
+  filter(str_length(contents)<250) %>% 
+  unnest_tokens(pos, contents,
+                token = SimplePos09) %>% 
+  filter(str_detect(pos, "/n|/v(v|a)")) %>% 
+  mutate(pos = str_replace_all(pos, "/.*$", "")) %>%
+  filter(str_detect(pos, "/n", negate = T)) %>% 
+  mutate(pos = str_replace_all(pos, "/.*$", "다")) %>%
+  arrange(id) %>% 
+  filter(str_length(pos)>1) %>% 
+  group_by(id) %>% 
+  count(pos, sort = T) %>% 
+  bind_tf_idf(pos, id, n) %>% 
+  filter(n>1) %>% 
+  arrange(desc(tf_idf))
+# ... 쓸모가 없다.
+
+
+
+# 감성분석
+remotes::install_github("mrchypark/KnuSentiLexR")
+library(KnuSentiLexR)
+tar %>%
+  unnest_tokens(sent, contents, token = "sentences") %>%
+  filter(nchar(sent) < 20) %>%
+  select(sent) %>% 
+  mutate(score = senti_score(sent),
+         magni = senti_magnitude(sent)) %>%
+  filter(score != 0)
+ # 정확도가 처참하다... 기사 제대로 써라가 +1
+ # 한글감성분석 API가 구글에 있지만, 성능이 엄청 안 좋다.
+ # 어케할까...
