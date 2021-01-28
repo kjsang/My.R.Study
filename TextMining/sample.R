@@ -119,3 +119,9 @@ remotes::install_github("haven-jeon/KoSpacing")
 library(KoSpacing)
 set_env()
 spacing("롯데마트가판매하고있는흑마늘양념치킨이논란이되고있다.")
+
+library(tidyverse)
+library(RmecabKo)
+library(KoNLP)
+spacing("롯데마트가판매하고있는흑마늘양념치킨이논란이되고있다.") %>%
+  SimplePos09
