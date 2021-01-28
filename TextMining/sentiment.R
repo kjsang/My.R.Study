@@ -5,7 +5,7 @@ library(tidytext)
 sentiments
 get_sentiments("afinn")
 get_sentiments("bing")
-get_sentiments("bing")
+get_sentiments("nrc")
 #> # A tibble: 6,786 x 2
 #>    word        sentiment
 #>    <chr>       <chr>    
@@ -20,7 +20,8 @@ get_sentiments("bing")
 #>  9 aborted     negative 
 #> 10 aborts      negative 
 #> # … with 6,776 more rowsCopy
-
+?view
+View(stop_words)
 library(janeaustenr)
 library(dplyr)
 library(stringr)
@@ -36,8 +37,8 @@ tidy_books <- austen_books() %>%
   unnest_tokens(word, text)
 
 
-nrc_joy <- get_sentiments("bing") %>% 
-  filter(sentiment == "positive")
+nrc_joy <- get_sentiments("nrc") %>% 
+  filter(sentiment == "joy")
 
 tidy_books %>%
   filter(book == "Emma") %>%
@@ -201,7 +202,7 @@ install.packages("wordcloud")
 library(wordcloud)
 
 tidy_books %>%
-  anti_join(stop_words) %>%
+  anti_join(custom_stop_words) %>%
   count(word) %>%
   with(wordcloud(word, n, max.words = 100))
   
