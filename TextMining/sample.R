@@ -1,6 +1,6 @@
 install.packages("N2H4")
 library(N2H4)
-library(dplyr)
+library(dplyr) 
 tar <- "https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313"
 getAllComment(tar) %>%
 	select(userName, contents)
