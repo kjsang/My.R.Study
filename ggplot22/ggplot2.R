@@ -4,12 +4,11 @@ library(tidyverse)
 # 파일 불러오기
 kbo <- read.csv('kbo.csv')
 kbo %>% 
-  glimpse %>% 
   as_tibble() %>%    
   mutate(타율=안타/타수) %>% 
   select(이름, 구단, 타율) %>% 
-  filter(구단=='키움') %>%
-  arrange(타율)
+  group_by(구단) %>% 
+  arrange(-타율)
 
 kbo %>% 
   as_tibble() %>% 
@@ -81,13 +80,13 @@ kbo2 %>% arrange(-ops) %>%
   coord_flip() +
   scale_fill_brewer(palette = 'Spectral')
 
-# 텍스트 조정
+####### 텍스트 조정 ##### 이거!
 kbo2 %>% arrange(-ops) %>% 
   head(10) %>%
   select(이름, 구단, ops) %>%
   ggplot(aes(x=reorder(이름, ops), y=ops, fill=구단)) +
   geom_bar(stat='identity') +
-  geom_text(aes(y=ops-.07, label=format(ops, digits=3))) +
+  geom_text(aes(y=ops-.1, label=format(ops, digits=3))) +
   coord_flip() +
   scale_fill_brewer(palette = 'Spectral')
 
@@ -112,7 +111,7 @@ kbo2 %>% arrange(-ops) %>%
   geom_text(aes(y=ops-.07, label=format(ops, digits=3))) +
   coord_flip() +
   labs(title='2019 프로야구 OPS 10걸', x="", y="") +
-  scale_fill_viridis_d() + # 그라데이션 팔레트 (direction=-1도 됨)
+  scale_fill_viridis_d(direction=-1, option = "magma") + # 그라데이션 팔레트 (direction=-1도 됨)
   theme(legend.position = 'none')
 # 그라데이션 팔레트는 option = 'viridis', magma, plasma, inferno, cividis 등등
 # 미적 감각이 필요한 부분이다..
@@ -186,7 +185,7 @@ kbo2 %>% arrange(-ops) %>%
 
 
 # 와플차트
-
+``
 install.packages('waffle')
 library(waffle)
 

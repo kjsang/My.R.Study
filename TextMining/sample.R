@@ -141,10 +141,11 @@ library(wordcloud)
   filter(str_length(contents)<250) %>% # 엄청 긴 거
   unnest_tokens(pos, contents,
               token = SimplePos09) %>%
-  filter(str_detect(pos, "/n")) %>%
-  mutate(pos_done = str_remove(pos, "/.*$")) %>% 
+  filter(str_detect(pos, "/n|v(v|a)")) %>% 
+  mutate(pos_done = str_remove_all(pos, "/.*$")) %>% 
   filter(str_length(pos_done)>1) %>%
   count(pos_done, sort = T) %>%
+  filter(pos_done !=  "^ㅋ") %>% 
   with (
     wordcloud(words = pos_done, freq = n, min.freq = 1,
               max.words=50, random.order=FALSE, rot.per=0.35, 
@@ -166,7 +167,7 @@ pos_d %>%
   select(-pos) %>% 
   group_by(userName) %>% 
   count(pos_done, sort=T) %>% 
-  filter(pos_done == "우리")
+  filter(pos_done == "우")
 
 # 동시출현빈도계산
 library(KoSpacing)
@@ -178,8 +179,6 @@ library(KoNLP)
   unnest_tokens(sent, contents,
                 token = "sentences") %>% 
   filter(str_length(sent)<198) %>% #에러가 떠서
-  mutate(sent=spacing(sent) %>% 
-           unlist()) %>% 
   mutate(id = as.numeric(1:n())) %>% 
   unnest_tokens(pos, sent,
                 token = SimplePos09) %>% 
@@ -202,7 +201,7 @@ library(forcats)
 library(ggplot2)
 # bar plot
 pw %>%
-  filter(item1 %in% c("우리")) %>%
+  filter(item1 %in% c("장관")) %>%
   top_n(15) %>%
   mutate(item2 = fct_reorder(item2, n, .desc = TRUE)) %>%
   ggplot(aes(x = item2, y = n, fill = item1)) +
@@ -211,7 +210,7 @@ pw %>%
 # 네트워크 시각화
 library(igraph)
 pw %>%
-  filter(n > 5) %>%
+  filter(n > 3) %>%
   graph_from_data_frame() ->
   pw_graph
 pw_graph
@@ -247,6 +246,7 @@ ggraph(pw_graph) +
   group_by(id) %>% 
   count(pos) %>% 
   bind_tf_idf(pos, id, n) %>% 
+  filter(n>1) %>% 
   ungroup() %>% 
   arrange(desc(tf_idf))
 
@@ -284,8 +284,8 @@ tar %>%
 # 감성분석
 remotes::install_github("mrchypark/KnuSentiLexR")
 library(KnuSentiLexR)
-tar %>%
-  unnest_tokens(sent, contents, token = "sentences") %>%
+rta %>%
+  unnest_tokens(sent, contents, token = "sentences") %>% # 띄어쓰기는 words simplepos09
   filter(nchar(sent) < 20) %>%
   select(sent) %>% 
   mutate(score = senti_score(sent),
