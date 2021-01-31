@@ -135,7 +135,7 @@ library(stringr)
 library(wordcloud)
 
 # 워드클라우드
-"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=028&aid=0002530818" %>%
   getAllComment() %>%
   select(userName, contents) %>%
   filter(str_length(contents)<250) %>% # 엄청 긴 거
@@ -153,7 +153,7 @@ library(wordcloud)
     )
 
 # 유저별 빈도를 R아보자 (단순빈도)
-"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=028&aid=0002530818" %>%
   getAllComment() %>%
   select(userName, contents) %>%
   filter(str_length(contents)<250) %>%
@@ -167,7 +167,7 @@ pos_d %>%
   select(-pos) %>% 
   group_by(userName) %>% 
   count(pos_done, sort=T) %>% 
-  filter(pos_done == "우")
+  filter(pos_done == "가덕도")
 
 # 동시출현빈도계산
 library(KoSpacing)
@@ -232,7 +232,7 @@ ggraph(pw_graph) +
 
 
 # tf-idf
-"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=005&aid=0001236313" %>%
+"https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=100&oid=366&aid=0000661953" %>%
   getAllComment() %>%
   select(userName, contents) %>%
   mutate(id = as.numeric(1:n())) %>%
@@ -246,7 +246,7 @@ ggraph(pw_graph) +
   group_by(id) %>% 
   count(pos) %>% 
   bind_tf_idf(pos, id, n) %>% 
-  filter(n>1) %>% 
+  filter(n>2) %>% 
   ungroup() %>% 
   arrange(desc(tf_idf))
 
