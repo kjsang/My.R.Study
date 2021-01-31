@@ -198,5 +198,190 @@ w %>%
   waffle(rows = 5, colors = c('#e0b151', '#1d93bc', '#2dbbdd'),
          legend_pos = "bottom")
 
+library(tidyverse)
+library(ggthemes)
 
 # 롤리팝 차트
+kovo <- read.csv('kovo.csv') %>%
+  as_tibble
+
+kovo %>% 
+  ggplot(aes(x=구단, y=퀵오픈)) +
+  geom_segment(aes(xend=구단, yend=0)) + # 끝점과 시작점 바꿔주기
+  geom_point(size=5) # 롤리롤리 팝팝
+
+kovo %>% 
+  ggplot(aes(x=reorder(구단, 퀵오픈), y=퀵오픈, color = 남녀부)) + # 구단을 하되, 퀵오픈 순서대로 해라, 색깔
+  geom_segment(aes(xend=구단, yend=0)) +
+  geom_point(size=5)
+
+kovo %>% 
+  ggplot(aes(x=reorder(구단, 퀵오픈), y=퀵오픈, color = 남녀부)) + # 구단을 하되, 퀵오픈 순서대로 해라, 색깔
+  geom_segment(aes(xend=구단, yend=0)) +
+  geom_point(size=5) +
+  facet_grid(~남녀부) # 남녀부별
+
+kovo %>% 
+  ggplot(aes(x=reorder(구단, 퀵오픈), y=퀵오픈, color = 남녀부)) + # 구단을 하되, 퀵오픈 순서대로 해라, 색깔
+  geom_segment(aes(xend=구단, yend=0)) +
+  geom_point(size=5) +
+  facet_grid(~남녀부, scales = "free_x") # 남녀부별 / 남녀 빈 칸 없애기
+
+kovo %>% 
+  ggplot(aes(x=reorder(구단, 퀵오픈), y=퀵오픈, color = 남녀부)) + # 구단을 하되, 퀵오픈 순서대로 해라, 색깔
+  geom_segment(aes(xend=구단, yend=0)) +
+  geom_point(size=5) +
+  coord_flip() +
+  facet_grid(~남녀부, scales = "free_x") # 남녀부별 / 남녀 빈 칸 없애기
+
+kovo %>% 
+  ggplot(aes(x=reorder(구단, 퀵오픈), y=퀵오픈, color = 남녀부)) + # 구단을 하되, 퀵오픈 순서대로 해라, 색깔
+  geom_segment(aes(xend=구단, yend=0)) +
+  geom_point(size=5) +
+  coord_flip() +
+  facet_grid(남녀부~., scales = "free_y") # 물결 위치에 따라 나타나는 모양이 다름(뒤에 점 붙여줘야함)
+
+kovo %>% 
+  ggplot(aes(x=reorder(구단, 퀵오픈), y=퀵오픈, color = 남녀부)) +
+  geom_segment(aes(xend=구단, yend=0)) +
+  geom_point(size=5) +
+  scale_color_manual(values=c('darkblue', 'darkred')) + # 색깔 지정해주기기
+  coord_flip() +
+  labs(x="") +
+  facet_grid(남녀부~., scales = "free_y")
+# 많이 그린다. 점만 남겨두기도 하고... 
+
+kovo %>% # 점만 남겨둔 모양 (세그먼트 지워주면 됨)
+  ggplot(aes(x=reorder(구단, 퀵오픈), y=퀵오픈, color = 남녀부)) +
+  geom_point(size=5) +
+  scale_color_manual(values=c('darkblue', 'darkred')) + # 색깔 지정해주기기
+  coord_flip() +
+  labs(x="") +
+  facet_grid(남녀부~., scales = "free_y")
+
+# 덤벨차트
+
+fifa <- read.csv('fifa.csv') %>%
+  as_tibble
+
+fifa %>% 
+  filter(confederation=='AFC') %>%
+  select(country_full, rank) %>% # 나라이름과 랭킹
+  group_by(country_full) %>% # 나라이름 묶기
+  summarise(최저=max(rank), 최고=min(rank)) %>% #맥스 민 구하기
+  ggplot(aes(x=country_full, y=최고)) + # 최고
+  geom_point()
+
+fifa %>% 
+  filter(confederation=='AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>% 
+  summarise(최저=max(rank), 최고=min(rank)) %>%
+  ggplot(aes(x=reorder(country_full, 최고), y=최고)) + # 최고로 순서정렬
+  geom_point()
+
+fifa %>% # 순위는 낮을 수록 좋으니 리버스필요
+  filter(confederation=='AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>% 
+  summarise(최저=max(rank), 최고=min(rank)) %>%
+  ggplot(aes(x=reorder(country_full, 최고), y=최고)) + # 최고로 순서정렬
+  scale_y_reverse() + # 리버스
+  geom_point()
+
+fifa %>% # 순위는 낮을 수록 좋으니 리버스필요
+  filter(confederation == 'AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>%
+  summarise(최저 = max(rank),  최고 = min(rank)) %>%
+  ggplot(aes(x = reorder(country_full, -최고), y = 최고)) + # 최고로 순서정렬 / 리버스2 (최고에 - 붙여준다)
+  scale_y_reverse() + # 리버스
+  geom_point() +
+  coord_flip() # x,y축 바꿔주고!
+
+fifa %>% # 최저점도 함께 보여주자
+  filter(confederation == 'AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>%
+  summarise(최저 = max(rank),  최고 = min(rank)) %>%
+  ggplot(aes(x = reorder(country_full, -최고), y = 최고)) +
+  scale_y_reverse() +
+  geom_point() + # 비워두면 ggplot 코드 상의 점을 찍는 것
+  geom_point(aes(y = 최저)) + # 최저점 하나 더 찍어주기
+  coord_flip()
+
+fifa %>% # 최저점도 함께 보여주자
+  filter(confederation == 'AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>%
+  summarise(최저 = max(rank),  최고 = min(rank)) %>%
+  ggplot(aes(x = reorder(country_full, -최고), y = 최고)) +
+  scale_y_reverse() +
+  geom_point() + 
+  geom_point(aes(y = 최저)) +
+  geom_segment(aes(xend=reorder(country_full, -최고), yend=최저)) + # 최고점, 최저점을 이어주자
+  coord_flip()
+
+fifa %>% # 화살표를 그려보자
+  filter(confederation == 'AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>%
+  summarise(최저 = max(rank),  최고 = min(rank)) %>%
+  ggplot(aes(x = reorder(country_full, -최고), y = 최고)) +
+  scale_y_reverse() +
+  geom_point() + 
+  geom_point(aes(y = 최저)) +
+  geom_segment(aes(xend=reorder(country_full, -최고), yend=최저), arrow=arrow(length = unit(0.2, "cm"))) + # arrow로 화살표를 그려주었다.
+  coord_flip
+
+fifa %>% # 화살표를 반대로 그려줘야하겠죠?
+  filter(confederation == 'AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>%
+  summarise(최저 = max(rank),  최고 = min(rank)) %>%
+  ggplot(aes(x = reorder(country_full, -최고), y = 최고)) +
+  scale_y_reverse() +
+  geom_point() + 
+  geom_point(aes(y = 최저)) +
+  geom_segment(aes(xend=reorder(country_full, -최고), y=최저, yend = 최고), arrow=arrow(length = unit(0.2, "cm"))) + # y 최저, yend를 최고로 설정
+  coord_flip()
+
+fifa %>% # 화살표 모양 이쁘게 해줘야겠죠? 디테일 살려주자!
+  filter(confederation == 'AFC') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>%
+  summarise(최저 = max(rank),  최고 = min(rank)) %>%
+  ggplot(aes(x = reorder(country_full, -최고), y = 최고)) +
+  scale_y_reverse() +
+  geom_point() + 
+  geom_point(aes(y = 최저)) +
+  geom_segment(aes(xend=reorder(country_full, -최고), y=최저-1.5, yend = 최고+1.5), arrow=arrow(length = unit(0.2, "cm")), color='gray50') + # y, yend 위치를 살짝 조정해준다. 색깔도 함께 입혀보자.
+  coord_flip()
+
+# 기왕 데이터가 있으니 한국 데이터를 살펴보자.
+fifa %>%
+  filter(country_abrv=='KOR') %>%
+  select(country_full, rank) %>%
+  group_by(country_full) %>%
+  summarise(최저=max(rank), 최고=min(rank))
+
+fifa %>% # 우리나라가 제일 잘했을 때는 언제?
+  filter(country_abrv=='KOR' & rank==17) %>% 
+  select(rank_date)
+
+fifa %>% # 우리나라 랭킹 추이?
+  filter(country_abrv=='KOR') %>%
+  ggplot(aes(x=rank_date, y=rank, group=country_abrv)) + # 나라이름을 기준으로 애네를 묶어라 라고 코드를 입력해준 것임
+  geom_line() +
+  scale_y_reverse()
+
+fifa %>% # x축 깔끔하게 보여주기
+  filter(country_abrv=='KOR') %>%
+  ggplot(aes(x=as.Date(rank_date), y=rank, group=country_abrv)) + # 데이트가 날짜라는 것을 알려주자
+  geom_line() +
+  scale_y_reverse()
+
+
+# 슬로프 차트
+# 이번에는 배구
+kal <- read.csv('kal.csv') %>% as_tibble
