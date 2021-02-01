@@ -102,8 +102,8 @@ m %>%
   unnest_tokens(word, text) -> raw_text # 어절단위로 끊은 것
 
 raw_text$word %>% head 
-grep('우리', raw_text$word) 
-grep('우리', raw_text$word) %>% length() # 세어보면? 정확하게 나온다.
+grep('국민', raw_text$word) 
+grep('국민', raw_text$word) %>% length() # 세어보면? 정확하게 나온다.
 
 for (i in 1:length(wl$noun)){
   wl[i, 2] <- grep(wl[i, 1], raw_text$word) %>% length

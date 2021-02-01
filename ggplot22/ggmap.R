@@ -4,16 +4,15 @@
   
 #install.packages('ggmap')
 library(ggmap)
-
+library(tidyverse)
 ## Google's Terms of Service: https://cloud.google.com/maps-platform/terms/.
 ## Please cite ggmap if you use it! See citation("ggmap") for details.
 
 register_google(key='##_발급_받으신_키_##')
-register_google(key='AIzaSyBSZEwVsmRiYLiCpSWW-ZSwFCvJgG7IhNU')
 
 install.packages('rvest')
 
-library('rvest') # 인터넷에서 정보를 긁어오는 패키지임
+library(rvest) # 인터넷에서 정보를 긁어오는 패키지임
 
 # 아래의 코드를 복사 붙여넣기 해주세요 (키가 등록이 되었는지 확인하는 방법)
 html.airports <- read_html('https://en.wikipedia.org/wiki/List_of_busiest_airports_by_passenger_traffic')

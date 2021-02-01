@@ -61,7 +61,7 @@ feat2 %>%
   ggraph() +
   geom_edge_link(alpha=.2) +
   geom_node_point(aes(color=factor(group))) +
-  geom_node_text(aes(label=name), size=3, repel=TRUE)
+  geom_node_text(aes(label=name), size=3, repel=TRUE) # 겹치는거 없애줘
 
 feat2 %>%
   as_tbl_graph(directed=FALSE) %>%
@@ -79,7 +79,7 @@ feat2 %>%
   activate(nodes) %>%
   mutate(neighbors = centrality_degree(),
          group = group_infomap()) %>%
-  ggraph("stress") +
+  ggraph("stress") + # 경고가 안 뜨
   geom_node_point(aes(color=factor(group))) +
   geom_node_text(aes(label=name), size=3, repel=TRUE) +
   geom_edge_link(alpha=.2) +
