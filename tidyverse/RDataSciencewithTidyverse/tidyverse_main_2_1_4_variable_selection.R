@@ -1,12 +1,15 @@
 ####################################################################
+
+library(tidyverse)
+library(readxl)
 ## 변수선별 
 # 서울시 25개 구별 도서관 현황 데이터(data.seoul.go.kr)
-seoul_library = read_xls("data_library.xls")
+seoul_library <- read_xls("data_library.xls")
 seoul_library
 
 # 기간, 자치구, 계 변수들만 선별
 seoul_library2 = seoul_library %>% 
-  select(기간, 자치구, 계)
+  select("기간", "자치구", "계")
 seoul_library2
 
 # 국립도서관 공공도서관 대학도서관 전문도서관 변수들만 버리는 경우 

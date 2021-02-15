@@ -15,6 +15,9 @@ my_first_tibble
 born = lubridate::as_date(born)  # lubridate 라이브러리를 구동하지 않고 내부 함수활용 
 tibble(name,born,year,grade,height)
 
+my_first_tibble %>% 
+  mutate(born = lubridate::as_date(born))
+
 # 변수이름을 붙이는데 tibble 데이터가 더 자유롭다. 
 tibble(
   name=c("Jake","Jessy","Jack"),
