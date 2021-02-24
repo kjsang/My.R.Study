@@ -15,7 +15,6 @@ mydata = data_131 %>%
     is.double,
     funs(ifelse(. < 0,NA,.))
   )
-
 # 간단한 명목변수 분석: 성별 응답자 빈도
 mydata %>% 
   count(PPGENDER)
@@ -27,7 +26,8 @@ mydata = mydata %>%
 mydata %>% 
   count(as_factor(female))
 
-# 시각화: 아랫줄은 "mydata %>% ggplot(aes(x=as_factor(female)))+"로 표현해도 동일
+# 시각화: 아랫줄은
+mydata %>% 
 ggplot(mydata,aes(x=as_factor(female)))+
   geom_bar()
 # 그래프를 보다 보기 좋게
@@ -65,15 +65,15 @@ ggplot(myresult,aes(x=religion,y=n))+
        y="Number of respondents")+
   coord_flip()
 # 라벨은 정리가 되었지만 명목변수 수준을 빈도수에 따라 정렬하면 더 좋을 듯 합니다. 
-myresult = myresult %>% 
-  mutate(
-    religion=fct_reorder(religion,n,"mean")
-  ) 
-ggplot(myresult,aes(x=religion,y=n))+
-  geom_bar(stat="identity")+
-  labs(x="Respondents' religions (including 'Refused' & 'None')",
-       y="Number of respondents")+
+myresult = myresult %>%
+  mutate(religion = fct_reorder(religion, n, "mean")
+         )
+  ggplot(myresult, aes(x = religion, y = n)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Respondents' religions (including 'Refused' & 'None')",
+       y = "Number of respondents") +
   coord_flip()
+myresult$religion
 
 # 정치적 성향(IDEO)변수를 3집단으로 리코딩 
 mydata = mydata %>% 
@@ -81,6 +81,8 @@ mydata = mydata %>%
     libcon3=as.double(cut(IDEO,c(0,3,4,Inf),1:3)),
     libcon3=labelled(libcon3,c(진보=1,중도=2,보수=3))
   )
+mydata %>% 
+  select(libcon3)
 # libcon3과 female 변수의 교차표 
 mydata %>% 
   count(as_factor(female),as_factor(libcon3))
@@ -156,14 +158,15 @@ myresult %>%
   )
   
 # 패시팅을 이용한 데이터 시각화 
-myresult %>% drop_na() %>% 
-ggplot(aes(x=`as_factor(female)`,y=n,fill=`as_factor(libcon3)`))+
-  geom_bar(stat='identity',position="fill")+
-  labs(x="응답자의 성별",y="응답자 퍼센트",fill="정치적 성향")+
-  scale_y_continuous(breaks=0.2*(0:5),
-                     labels=str_c(20*(0:5),"%",sep=""))+
-  theme(legend.position="top")+
-  facet_grid(.~`as_factor(white)`)
+myresult %>%
+  drop_na() %>%
+  ggplot(aes(x = `as_factor(female)`, y = n, fill = `as_factor(libcon3)`)) +
+  geom_bar(stat = 'identity', position = "fill") +
+  labs(x = "응답자의 성별", y = "응답자 퍼센트", fill = "정치적 성향") +
+  scale_y_continuous(breaks = 0.2 * (0:5),
+                     labels = str_c(20 * (0:5), "%", sep = "")) +
+  theme(legend.position = "top") +
+  facet_grid(. ~ `as_factor(white)`)
 
 # 패시팅을 하면 4개 이상의 명목변수들도 고려할 수 있겠지만, 
 # 분석결과 해석이 복잡하기 때문에 개인적으로 권하지는 않습니다.
@@ -194,13 +197,17 @@ mydata = data_131 %>%
   mutate_if(
     is.double,
     funs(ifelse(. < 0,NA,.))
-  )
+  ) %>% 
+  glimpse()
 
 # 한 개의 등간변수에 대한 기술통계치 구하기 
 mydata %>% 
   summarize(mean(Q14,na.rm=T))
 mydata %>% 
   summarize(mean_Q14=mean(Q14,na.rm=T))
+
+mydata %>% 
+  summar
 
 # 막대그래프로 시각화
 mydata %>% 

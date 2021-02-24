@@ -1,5 +1,9 @@
 ###############################################################
 ## 시간변수 관리 
+
+library(tidyverse)
+library(haven)
+
 data_131 = read_spss("data_TESS3_131.sav")
 mydata = data_131 %>% 
   select(starts_with("tm_"),duration,PPAGE,PPEDUC)
@@ -43,18 +47,19 @@ gridExtra::grid.arrange(g1,g2,nrow=1,ncol=2)
 # 성실/불성실 응답자의 연령 및 교육년수 평균비
 mydata %>% 
   mutate(
-    good_surveyer=ifelse(survey_second>(10^4.5)|survey_second<(10^2),
+    good_surveyer=ifelse(survey_second>(10^4)|survey_second<(10^2),
                          0,1)
   ) %>% 
   group_by(good_surveyer) %>% 
   summarize(mean(PPAGE),mean(PPEDUC),n()) 
 
 # 초단위 없이 새로운 <dttm> 형태 변수생성 
-mydata = mydata %>% 
+mydata %>% 
   mutate(
     start_time=make_datetime(start_yr,start_mt,start_dy,start_hr,start_mn),
     end_time=make_datetime(end_yr,end_mt,end_dy,end_hr,end_mn)
-  )
+  ) -> mydata
+mydata %>% glimpse()
 
 # 새로 생성된 변수와 duration 변수는 같은가? 
 mydata %>% 
@@ -69,4 +74,4 @@ mydata %>%
     survey_minute=floor(as.double(tm_finish-tm_start)/60)
   ) %>% 
   filter(duration != survey_minute) %>% 
-  select(starts_with("tm"),duration,survey_minute)
+  select(starts_with("tm"),duration,survey_minute) 

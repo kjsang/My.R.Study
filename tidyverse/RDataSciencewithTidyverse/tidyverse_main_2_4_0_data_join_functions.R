@@ -1,6 +1,9 @@
 ##################################################################################################
 # 데이터 합치기: *_join() 함수들 
 # 서울시 구별 도서관과 학생,학급수 관련 데이터 열기 
+library(readxl)
+library(tidyverse)
+
 seoul_library = read_xls("data_library.xls")
 seoul_library %>% print(n=2)
 seoul_educ = read_xls("data_student_class.xls",skip=2)
@@ -25,7 +28,8 @@ mydata1 %>%
 
 # 식별변수가 2개 이상인 경우
 mydata1 %>% 
-  full_join(mydata2,by=c("year","district"))
+  full_join(mydata2,by=c("year","district")) %>% 
+  print(n=25)
 
 # 데이터를 다음과 같이 선별하여 저장 
 mydata1 = seoul_library %>% 
@@ -41,13 +45,15 @@ mydata2 %>% print(n=2)
 
 # 사례가 상이한 경우 full_join() 함수 이용 데이터 합치기 
 mydata = mydata1 %>% 
-  full_join(mydata2,by=c("year","district"))
+  full_join(mydata2,by=c("year","district")) %>% 
+  print(n=400)
 mydata %>% count(is.na(lib_total)) # 도서관수 변수의 결측값수는?
 mydata %>% count(is.na(stdt_kinder)) # 유치원생 변수의 결측값수는?
 
 # 사례가 상이한 경우 inner_join() 함수 이용 데이터 합치기 
 mydata = mydata1 %>% 
-  inner_join(mydata2,by=c("year","district"))
+  inner_join(mydata2,by=c("year","district")) %>% 
+  print(n=100)
 mydata %>% count(is.na(lib_total)) # 도서관수 변수의 결측값수는?
 mydata %>% count(is.na(stdt_kinder)) # 유치원생 변수의 결측값수는?
 
@@ -56,6 +62,10 @@ mydata = mydata1 %>%
   left_join(mydata2,by=c("year","district"))
 mydata %>% count(is.na(lib_total)) # 도서관수 변수의 결측값수는?
 mydata %>% count(is.na(stdt_kinder)) # 유치원생 변수의 결측값수는?
+
+mydata1 %>% 
+  left_join(mydata2,by=c("year","district")) %>% 
+  print(n=175)
 
 # 사례가 상이한 경우 right_join() 함수 이용 데이터 합치기 
 mydata = mydata1 %>% 
