@@ -10,10 +10,16 @@ library(tidyverse)
 ?qmethod
 
 data(lipset)
-results <- qmethod(lipset[[1]], nfactors = 3, rotation = "varimax")
+results <- qmethod(lipset[[1]], nfactors = 2, rotation = "varimax")
 summary(results)
 results
 plot(results)
+
+results$dataset
+results$zsc
+results$zsc_n
+results$qdc
+
 
 lipset
 
@@ -26,13 +32,13 @@ print(results, length = 5, digits = 1)
 
 ### 그래프 그리는 방법 ###
 ## S3 method for class 'QmethodRes'
-plot(x, xlab = 'z-scores', ylab = 'statements', 
-     pchlist = NULL, colours = NULL, 
-     fnames = NULL, legend = TRUE,
-     dist = TRUE, pchlist.fill = NULL,
-     leg.pos="bottomright", xlim= NULL, 
-     sort.items=T, factors = NULL,
-     ...)
+# plot(x, xlab = 'z-scores', ylab = 'statements', 
+#      pchlist = NULL, colours = NULL, 
+#      fnames = NULL, legend = TRUE,
+#      dist = TRUE, pchlist.fill = NULL,
+#      leg.pos="bottomright", xlim= NULL, 
+#      sort.items=T, factors = NULL,
+#      ...)
 
 data(lipset)
 results <- qmethod(lipset[[1]], nfactors = 3, rotation = "varimax")
@@ -44,3 +50,14 @@ plot(results, main = title, sub = subtitle)
 # Order the items in a different way
 plot(results, main = title, sub = subtitle, 
      sort.items = c(rev(1:nrow(results$zsc))))
+
+
+data(lipset)
+boots <- qmboots(lipset[[1]], nfactors = 3, nsteps = 50,
+                 load = "auto", rotation = "varimax", 
+                 indet = "qindet", fsi = TRUE)
+
+boots.summary <- qmb.summary(boots)
+
+qmb.plot(boots.summary, 3, type = "loa", sort="difference")
+
