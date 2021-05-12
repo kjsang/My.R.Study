@@ -10,7 +10,7 @@ library(tidyverse)
 ?qmethod
 
 data(lipset)
-results <- qmethod(lipset[[1]], nfactors = 2, rotation = "varimax")
+results <- qmethod(lipset[[1]], nfactors = 3, rotation = "varimax")
 summary(results)
 results
 plot(results)
@@ -61,3 +61,7 @@ boots.summary <- qmb.summary(boots)
 
 qmb.plot(boots.summary, 3, type = "loa", sort="difference")
 
+install.packages("qdap")
+??qdap
+install.packages("sna")
+library(sna)
